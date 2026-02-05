@@ -17,7 +17,9 @@
 
 body{
   min-height:100vh;
-  background:linear-gradient(120deg,#0f2027,#203a43,#2c5364);
+  background:
+    radial-gradient(circle at top, rgba(0,198,255,0.18), transparent 40%),
+    linear-gradient(140deg,#0b0f1a,#111827,#020617);
   display:flex;
   align-items:center;
   justify-content:center;
@@ -25,39 +27,41 @@ body{
   color:#fff;
 }
 
-/* ===== PARTICLES ===== */
-.particle{
+/* ===== PREMIUM FLOATING GLOWS ===== */
+.glow{
   position:absolute;
-  width:6px;
-  height:6px;
-  background:rgba(255,255,255,0.15);
+  width:120px;
+  height:120px;
+  background:radial-gradient(circle, rgba(0,198,255,0.25), transparent 70%);
   border-radius:50%;
-  animation:float linear infinite;
+  animation:move 18s linear infinite;
+  filter:blur(10px);
 }
 
-@keyframes float{
-  from{transform:translateY(110vh);}
-  to{transform:translateY(-10vh);}
+@keyframes move{
+  from{transform:translateY(120vh);}
+  to{transform:translateY(-20vh);}
 }
 
 /* ===== CARD ===== */
 .card{
   width:90%;
   max-width:380px;
-  padding:32px 26px;
-  background:rgba(255,255,255,0.12);
-  backdrop-filter:blur(16px);
-  border-radius:18px;
-  box-shadow:0 20px 45px rgba(0,0,0,0.45);
+  padding:34px 26px;
+  background:rgba(255,255,255,0.10);
+  backdrop-filter:blur(18px);
+  border-radius:20px;
+  box-shadow:0 25px 60px rgba(0,0,0,0.55);
   text-align:center;
   z-index:5;
 }
 
-.logo{
-  font-size:30px;
-  font-weight:600;
-  letter-spacing:1px;
-  margin-bottom:8px;
+/* LOGO */
+.logo-img{
+  width:180px;
+  max-width:80%;
+  margin-bottom:14px;
+  filter:drop-shadow(0 8px 24px rgba(0,0,0,0.6));
 }
 
 .sub{
@@ -70,17 +74,18 @@ input{
   width:100%;
   padding:15px;
   border:none;
-  border-radius:12px;
+  border-radius:14px;
   outline:none;
   font-size:15px;
   margin-bottom:18px;
 }
 
+/* BUTTON */
 button{
   width:100%;
   padding:15px;
   border:none;
-  border-radius:12px;
+  border-radius:14px;
   background:linear-gradient(135deg,#00c6ff,#0072ff);
   color:#fff;
   font-size:16px;
@@ -89,9 +94,14 @@ button{
   transition:0.3s;
 }
 
-button:hover{
-  transform:translateY(-2px);
-  box-shadow:0 12px 28px rgba(0,0,0,0.45);
+button.loading{
+  opacity:0.8;
+  pointer-events:none;
+}
+
+button.loading span::after{
+  content:"  Please wait...";
+  font-weight:400;
 }
 
 .footer{
@@ -104,26 +114,29 @@ button:hover{
 
 <body>
 
-<!-- PARTICLES -->
+<!-- FLOATING GLOWS -->
 <script>
-for(let i=0;i<40;i++){
-  let p=document.createElement("div");
-  p.className="particle";
-  p.style.left=Math.random()*100+"%";
-  p.style.animationDuration=(6+Math.random()*8)+"s";
-  p.style.animationDelay=Math.random()*5+"s";
-  document.body.appendChild(p);
+for(let i=0;i<6;i++){
+  let g=document.createElement("div");
+  g.className="glow";
+  g.style.left=Math.random()*100+"%";
+  g.style.animationDuration=(14+Math.random()*10)+"s";
+  g.style.animationDelay=Math.random()*5+"s";
+  document.body.appendChild(g);
 }
 </script>
 
 <div class="card">
-  <div class="logo">DURGABET</div>
+  <img src="logo.png" alt="YOLO247 Logo" class="logo-img">
+
   <div class="sub">Enter your mobile number</div>
 
   <form id="leadForm">
     <input type="tel" id="mobile" placeholder="Mobile number / मोबाइल नंबर"
            required pattern="[0-9]{10}">
-    <button type="submit">Submit</button>
+    <button type="submit" id="submitBtn">
+      <span id="btnText">Submit</span>
+    </button>
   </form>
 
   <div class="footer">
@@ -136,7 +149,7 @@ for(let i=0;i<40;i++){
 const FORM_URL = "https://script.google.com/macros/s/AKfycbycUQdlJ4tVrZPJ6W9ubCH9b0Js6jBWbqbw73jmVmmK63MPLsTRNpWCChmkrU3xf4G_ZA/exec";
 const REDIRECT_URL = "https://hosturl.info/TrPABO";
 
-/* 5 sec auto redirect if no input */
+/* Auto redirect if idle */
 setTimeout(()=>{
   if(document.getElementById("mobile").value.trim()===""){
     window.location.href = REDIRECT_URL;
@@ -146,20 +159,24 @@ setTimeout(()=>{
 document.getElementById("leadForm").addEventListener("submit",function(e){
   e.preventDefault();
 
-  let mobile=document.getElementById("mobile").value.trim();
+  let btn = document.getElementById("submitBtn");
+  let btnText = document.getElementById("btnText");
+  let mobile = document.getElementById("mobile").value.trim();
+
+  btn.classList.add("loading");
+  btnText.innerText = "Submitting";
 
   fetch(FORM_URL,{
     method:"POST",
     body:new URLSearchParams({mobile:mobile})
   })
-  .then(res=>res.json())
-  .then(data=>{
-    setTimeout(()=>{
-      window.location.href = REDIRECT_URL;
-    },3000);
+  .then(()=>{
+    btnText.innerText = "✅ Submitted";
+    setTimeout(()=>window.location.href = REDIRECT_URL,2000);
   })
   .catch(()=>{
-    window.location.href = REDIRECT_URL;
+    btnText.innerText = "⚠️ Try again";
+    btn.classList.remove("loading");
   });
 });
 </script>
