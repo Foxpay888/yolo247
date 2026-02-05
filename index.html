@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DURGABET | Register</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
+
+body{
+  min-height:100vh;
+  background:linear-gradient(120deg,#0f2027,#203a43,#2c5364);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  color:#fff;
+}
+
+/* ===== PARTICLES ===== */
+.particle{
+  position:absolute;
+  width:6px;
+  height:6px;
+  background:rgba(255,255,255,0.15);
+  border-radius:50%;
+  animation:float linear infinite;
+}
+
+@keyframes float{
+  from{transform:translateY(110vh);}
+  to{transform:translateY(-10vh);}
+}
+
+/* ===== CARD ===== */
+.card{
+  width:90%;
+  max-width:380px;
+  padding:32px 26px;
+  background:rgba(255,255,255,0.12);
+  backdrop-filter:blur(16px);
+  border-radius:18px;
+  box-shadow:0 20px 45px rgba(0,0,0,0.45);
+  text-align:center;
+  z-index:5;
+}
+
+.logo{
+  font-size:30px;
+  font-weight:600;
+  letter-spacing:1px;
+  margin-bottom:8px;
+}
+
+.sub{
+  font-size:14px;
+  opacity:0.9;
+  margin-bottom:26px;
+}
+
+input{
+  width:100%;
+  padding:15px;
+  border:none;
+  border-radius:12px;
+  outline:none;
+  font-size:15px;
+  margin-bottom:18px;
+}
+
+button{
+  width:100%;
+  padding:15px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(135deg,#00c6ff,#0072ff);
+  color:#fff;
+  font-size:16px;
+  font-weight:500;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 28px rgba(0,0,0,0.45);
+}
+
+.footer{
+  margin-top:18px;
+  font-size:12px;
+  opacity:0.85;
+}
+</style>
+</head>
+
+<body>
+
+<!-- PARTICLES -->
+<script>
+for(let i=0;i<40;i++){
+  let p=document.createElement("div");
+  p.className="particle";
+  p.style.left=Math.random()*100+"%";
+  p.style.animationDuration=(6+Math.random()*8)+"s";
+  p.style.animationDelay=Math.random()*5+"s";
+  document.body.appendChild(p);
+}
+</script>
+
+<div class="card">
+  <div class="logo">DURGABET</div>
+  <div class="sub">Enter your mobile number</div>
+
+  <form id="leadForm">
+    <input type="tel" id="mobile" placeholder="Mobile number / मोबाइल नंबर"
+           required pattern="[0-9]{10}">
+    <button type="submit">Submit</button>
+  </form>
+
+  <div class="footer">
+    Our team will call back you soon<br>
+    © All rights reserved
+  </div>
+</div>
+
+<script>
+const FORM_URL = "https://script.google.com/macros/s/AKfycbycUQdlJ4tVrZPJ6W9ubCH9b0Js6jBWbqbw73jmVmmK63MPLsTRNpWCChmkrU3xf4G_ZA/exec";
+const REDIRECT_URL = "https://hosturl.info/TrPABO";
+
+/* 5 sec auto redirect if no input */
+setTimeout(()=>{
+  if(document.getElementById("mobile").value.trim()===""){
+    window.location.href = REDIRECT_URL;
+  }
+},5000);
+
+document.getElementById("leadForm").addEventListener("submit",function(e){
+  e.preventDefault();
+
+  let mobile=document.getElementById("mobile").value.trim();
+
+  fetch(FORM_URL,{
+    method:"POST",
+    body:new URLSearchParams({mobile:mobile})
+  })
+  .then(res=>res.json())
+  .then(data=>{
+    setTimeout(()=>{
+      window.location.href = REDIRECT_URL;
+    },3000);
+  })
+  .catch(()=>{
+    window.location.href = REDIRECT_URL;
+  });
+});
+</script>
+
+</body>
+</html>
